@@ -7,6 +7,7 @@ import com.sip.store.entities.Provider;
 import com.sip.store.repositories.ClasseRepository;
 import com.sip.store.repositories.EmploisRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,10 +15,13 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 @Controller
@@ -27,26 +31,34 @@ public class EmploisController {
     private EmploisRepository emploisRepository;
     @Autowired
     private ClasseRepository classeRepository;
-    public static String uploadDirectory = System.getProperty("user.dir")+"/src/main/resources/static/uploads";
 
     @PostMapping("add")
-    public String addEmplois( Emplois emplois, BindingResult result, @RequestParam(name = "classeId",required = false) Long f,
-                              @RequestParam("files") MultipartFile[] files)
+    public String addEmplois(@RequestParam(name = "classeId",required = false) Long f,
+                             @RequestParam MultipartFile img, HttpSession session,Emplois emplois)
     {
         Classe classe=classeRepository.findById(f)
                 .orElseThrow(()-> new IllegalArgumentException("Invalid classe Id:" + f));
         emplois.setClasse(classe);
-        StringBuilder fileName = new StringBuilder();
-        MultipartFile file = files[0];
-        Path fileNameAndPath = Paths.get(uploadDirectory, file.getOriginalFilename());
-        fileName.append(file.getOriginalFilename());
-        try {
-            Files.write(fileNameAndPath,file.getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
+       // Emplois im = new Emplois();
+        emplois.setPdf(img.getOriginalFilename());
+
+        Emplois uploadImg = emploisRepository.save(emplois);
+
+        if (uploadImg != null) {
+            try {
+
+                File saveFile = new ClassPathResource("static/img").getFile();
+
+                Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + img.getOriginalFilename());
+                //System.out.println(path);
+                Files.copy(img.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        emplois.setPdf(fileName.toString());
-        emploisRepository.save(emplois);
+
+        session.setAttribute("msg", "Image Upload Sucessfully");
         return "redirect:list";
     }
     @GetMapping("add")
@@ -92,20 +104,7 @@ public class EmploisController {
     @PostMapping("edit")
     public String updateEmplois(@Validated Emplois emplois, BindingResult result, Model model) {
         emploisRepository.save(emplois);
-        return"redirect:list";
+        return "redirect:list";
 
-    }
-    @GetMapping("show/{id}")
-    public String showEmplois(@PathVariable("id") long id, Model model) {
-        Classe classe = classeRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid classe Id:" + id));
-        List<Emplois> emplois = emploisRepository.findEmploisByClasse(id);
-        for (Emplois a : emplois)
-            System.out.println("Emplois = " + a.getPdf());
-
-        model.addAttribute("emplois", emplois);
-        model.addAttribute("classe", classe);
-        return "emplois/showEmplois";
     }
 }
-

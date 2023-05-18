@@ -36,7 +36,7 @@ public class Emplois {
         this.pdf = pdf;
     }
 
-    public Classe getClasse() {
+   public Classe getClasse() {
         return classe;
     }
 
