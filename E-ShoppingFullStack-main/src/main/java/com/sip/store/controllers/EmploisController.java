@@ -31,6 +31,7 @@ public class EmploisController {
     private EmploisRepository emploisRepository;
     @Autowired
     private ClasseRepository classeRepository;
+    public static String uploadDirectory = System.getProperty("user.dir")+"/src/main/resources/static/uploads";
 
     @PostMapping("add")
     public String addEmplois(@RequestParam(name = "classeId",required = false) Long f,

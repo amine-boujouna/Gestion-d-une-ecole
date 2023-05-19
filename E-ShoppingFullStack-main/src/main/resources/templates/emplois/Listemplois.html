@@ -107,7 +107,7 @@
                   <tr th:each="emplois : ${emplois}"  align="center">
                     <td th:text="${emplois.id}"></td>
                     <td th:text="${emplois.classe.nom}"></td>
-                    <td> <img alt="" th:src="@{'img/'+${emplois.pdf}}"   width="250" height="250">  </td>
+                    <td> <img alt="" th:src="@{'/img/'+${emplois.pdf}}"   width="250" height="250">  </td>
                     <td><a th:href="@{/emplois/show/{id}(id=${emplois.id})}" class="btn btn-primary"><i class="fa fa-eye ml-2"></i></a></td>
                     <td><a th:href="@{/emplois/edit/{id}(id=${emplois.id})}" class="btn btn-warning" title="Mise à jour"><i class="fa fa-edit ml-2"></i> </a></td>
                     <td><a th:href="@{/emplois/delete/{id}(id=${emplois.id})}" class="btn btn-danger" title="Supprimer"><i class="fa fa-user-times ml-2"> </a></td>
