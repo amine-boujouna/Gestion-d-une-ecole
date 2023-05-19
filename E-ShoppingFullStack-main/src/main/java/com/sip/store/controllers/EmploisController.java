@@ -39,7 +39,6 @@ public class EmploisController {
         Classe classe=classeRepository.findById(f)
                 .orElseThrow(()-> new IllegalArgumentException("Invalid classe Id:" + f));
         emplois.setClasse(classe);
-       // Emplois im = new Emplois();
         emplois.setPdf(img.getOriginalFilename());
 
         Emplois uploadImg = emploisRepository.save(emplois);
@@ -50,7 +49,7 @@ public class EmploisController {
                 File saveFile = new ClassPathResource("static/img").getFile();
 
                 Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + img.getOriginalFilename());
-                //System.out.println(path);
+                System.out.println(path);
                 Files.copy(img.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 
             } catch (Exception e) {
