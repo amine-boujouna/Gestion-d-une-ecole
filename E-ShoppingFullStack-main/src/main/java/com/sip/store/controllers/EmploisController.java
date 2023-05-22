@@ -1,9 +1,6 @@
 package com.sip.store.controllers;
 
-import com.sip.store.entities.Article;
-import com.sip.store.entities.Classe;
-import com.sip.store.entities.Emplois;
-import com.sip.store.entities.Provider;
+import com.sip.store.entities.*;
 import com.sip.store.repositories.ClasseRepository;
 import com.sip.store.repositories.EmploisRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,22 +86,46 @@ public class EmploisController {
         return "emplois/Listemplois";
     }
 
+
     @GetMapping("edit/{id}")
     public String showEmploisFormToUpdate(@PathVariable("id") long id, Model model) {
         Emplois emplois = emploisRepository.findById(id)
                 .orElseThrow(()->new IllegalArgumentException("Invalid emplois Id:" + id));
 
         model.addAttribute("emplois", emplois);
+        model.addAttribute("classe", classeRepository.findAll());
+        model.addAttribute("classeId", emplois.getClasse().getId());
 
         return "emplois/updateemplois";
+    }
+    @PostMapping("edit/{id}")
+    public String updateEmplois(@PathVariable("id") long id,Emplois emplois, BindingResult result,
+                                Model model, @RequestParam(name = "classeId", required = false) Long p) {
+        if (result.hasErrors()) {
+            emplois.setId(id);
+            return "emplois/updateemplois";
+        }
+
+        Classe classe = classeRepository.findById(p)
+                .orElseThrow(()-> new IllegalArgumentException("Invalid classe Id:" + p));
+        emplois.setClasse(classe);
+
+        emploisRepository.save(emplois);
+        model.addAttribute("emplois", emploisRepository.findAll());
+        return "emplois/Listemplois";
     }
 
 
 
-    @PostMapping("edit")
-    public String updateEmplois(@Validated Emplois emplois, BindingResult result, Model model) {
-        emploisRepository.save(emplois);
-        return "redirect:list";
 
+
+
+
+    @GetMapping("show/{id}")
+    public String showEmplois(@PathVariable("id") long id, Model model) {
+        Emplois emplois = emploisRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid emplois Id:" + id));
+        model.addAttribute("emplois", emplois);
+        return "emplois/showEmplois";
     }
 }

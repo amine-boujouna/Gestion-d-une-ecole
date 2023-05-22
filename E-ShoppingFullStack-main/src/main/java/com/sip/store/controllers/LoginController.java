@@ -138,5 +138,10 @@ public class LoginController {
     public String error403() {
         return "/error/403";
     }
+    @GetMapping("/logout")
+    public String logout(){
+        return "login";
+    }
+
 }
 

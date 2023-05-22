@@ -17,10 +17,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 @Controller
 @RequestMapping("/users/")
 public class UserController {
@@ -31,7 +34,7 @@ public class UserController {
     private RoleRepository roleRepository;
 
     @Autowired
-    public UserController(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public UserController(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder,RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder=bCryptPasswordEncoder;
         this.roleRepository = roleRepository;
@@ -64,19 +67,22 @@ public class UserController {
         }
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user.setActive(0);
+        Role userRole = roleRepository.findByRole("USER");
+        user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
         userRepository.save(user);
         return "redirect:list";
     }
 
 
-
+    @Transactional
     @GetMapping("delete/{id}")
     public String deleteUser(@PathVariable("id") long id, Model model) {
-
+/*
         User user = userRepository.findById(id).
                 orElseThrow(()-> new IllegalArgumentException("Invalid user Id:" + id));
 
-        userRepository.delete(user);
+        userRepository.delete(user);*/
+        userRepository.deleteuser(id);
         return "redirect:../list";
     }
 

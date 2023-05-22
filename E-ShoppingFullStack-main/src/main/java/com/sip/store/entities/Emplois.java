@@ -11,7 +11,7 @@ public class Emplois {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    @NotBlank(message = "nom is mandatory")
+    @NotBlank(message = "pdf is mandatory")
     @Column(name = "pdf")
     private String pdf;
     @JsonIgnore
