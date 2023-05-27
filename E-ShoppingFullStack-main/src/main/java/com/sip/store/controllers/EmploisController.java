@@ -100,7 +100,7 @@ public class EmploisController {
     }
     @PostMapping("edit/{id}")
     public String updateEmplois(@PathVariable("id") long id,Emplois emplois, BindingResult result,
-                                Model model, @RequestParam(name = "classeId", required = false) Long p) {
+                                Model model, @RequestParam(name = "classeId", required = false) Long p,@RequestParam MultipartFile img) {
         if (result.hasErrors()) {
             emplois.setId(id);
             return "emplois/updateemplois";
@@ -109,6 +109,7 @@ public class EmploisController {
         Classe classe = classeRepository.findById(p)
                 .orElseThrow(()-> new IllegalArgumentException("Invalid classe Id:" + p));
         emplois.setClasse(classe);
+        emplois.setPdf(img.getOriginalFilename());
 
         emploisRepository.save(emplois);
         model.addAttribute("emplois", emploisRepository.findAll());
