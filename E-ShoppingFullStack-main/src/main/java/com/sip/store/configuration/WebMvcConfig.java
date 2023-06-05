@@ -21,6 +21,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         return bCryptPasswordEncoder;
     }
+
+
 	
 	@Bean(name = "localeResolver")
 	public LocaleResolver getLocaleResolver()  {

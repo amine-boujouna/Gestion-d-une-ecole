@@ -36,6 +36,9 @@ public class User {
 	@Length(min = 5, message = "*Your password must have at least 5 characters")
 	@NotEmpty(message = "*Please provide your password")
 	private String password;
+	@Column(name = "username")
+	@NotEmpty(message = "*Please provide your username")
+	private String username;
 	@Column(name = "name")
 	@NotEmpty(message = "*Please provide your name")
 	private String name;
@@ -117,6 +120,14 @@ public class User {
 
 	public void setGenre(String genre) {
 		this.genre = genre;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getProfession() {
