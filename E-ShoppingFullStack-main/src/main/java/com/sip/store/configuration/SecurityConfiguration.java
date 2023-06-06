@@ -54,9 +54,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception { // méthode responsable de l'autorisation
 
 
-        http.
+                http.csrf().
+                disable().
                 authorizeRequests()
-                .antMatchers("/").permitAll()
+                .antMatchers("/").permitAll().antMatchers("/role/Add").permitAll()
+                        .antMatchers("/basicauth").permitAll()
+                .antMatchers("/role/list").permitAll()
+                        .antMatchers("/Registration").permitAll()
                 .antMatchers("/api/profile").permitAll()
                 .antMatchers("/api/getAll").permitAll()
                 .antMatchers("/api/profile/{id}").permitAll()
@@ -70,20 +74,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/article/edit/**").hasAnyAuthority("ADMIN","SUPERADMIN")
                 .antMatchers("/article/delete/**").hasAnyAuthority("ADMIN","SUPERADMIN")
                 .antMatchers("/article/show/**").hasAnyAuthority("ADMIN","SUPERADMIN","AGENT")
-                .antMatchers("/article/list").hasAnyAuthority("ADMIN","SUPERADMIN","AGENT").anyRequest()
-                .authenticated().and().csrf().disable().formLogin() // l'accès de fait via un formulaire
-
-                .loginPage("/login").failureUrl("/login?error=true") // fixer la page login
-
-                .defaultSuccessUrl("/dashboard") // page d'accueil après login avec succès
-                .usernameParameter("email") // paramètres d'authentifications login et password
-                .passwordParameter("password")
-                .and().logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout")) // route de deconnexion ici /logut
-                .logoutSuccessUrl("/login").and().exceptionHandling() // une fois deconnecté redirection vers login
-
-                .accessDeniedPage("/403");
-
+                .antMatchers("/article/list").hasAnyAuthority("ADMIN","SUPERADMIN","AGENT")
+                .anyRequest()
+                .authenticated()
+                .and()
+                .httpBasic();
        // http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
 

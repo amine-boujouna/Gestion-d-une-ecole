@@ -29,22 +29,17 @@ public class User {
 
 	@Column(name = "email")
 	@Email(message = "*Please provide a valid Email")
-	@NotEmpty(message = "*Please provide an email")
 	private String email;
 
 	@Column(name = "password")
 	@Length(min = 5, message = "*Your password must have at least 5 characters")
-	@NotEmpty(message = "*Please provide your password")
 	private String password;
 	@Column(name = "username")
-	@NotEmpty(message = "*Please provide your username")
 	private String username;
 	@Column(name = "name")
-	@NotEmpty(message = "*Please provide your name")
 	private String name;
 
 	@Column(name = "last_name")
-	@NotEmpty(message = "*Please provide your last name")
 	private String lastName;
 
 	@Column(name = "active")
@@ -56,6 +51,8 @@ public class User {
 	private String genre;
 	@Column(name = "profession")
 	private String profession;
+	@Column(name = "temp")
+	private String temp;
 
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
@@ -136,5 +133,13 @@ public class User {
 
 	public void setProfession(String profession) {
 		this.profession = profession;
+	}
+
+	public String getTemp() {
+		return temp;
+	}
+
+	public void setTemp(String temp) {
+		this.temp = temp;
 	}
 }

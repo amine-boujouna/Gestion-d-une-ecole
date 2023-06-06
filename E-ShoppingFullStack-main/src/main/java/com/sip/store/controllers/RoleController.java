@@ -1,6 +1,9 @@
 package com.sip.store.controllers;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -51,6 +54,26 @@ public class RoleController {
         Role rSaved = roleRepository.save(r);
         System.out.println("role = "+ rSaved);
         return "redirect:list";
+    }
+
+    @PostMapping("Add")
+    public Map addrole(@RequestParam("role") String role) {
+        Map<String,String> res = new HashMap<>();
+        Role existRole = null;
+        String added = "True";
+        //System.out.println(role);
+        Role r = new Role(role);
+        existRole = roleRepository.findByRole(role);
+        if(existRole == null) {
+            Role rSaved = roleRepository.save(r);
+            System.out.println("role = " + rSaved);
+        }
+        else{
+            System.out.println("role existe déjà");
+            added = "False";
+        }
+        res.put("role",role);
+        return res;
     }
 
 
