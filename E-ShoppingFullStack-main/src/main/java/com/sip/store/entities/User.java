@@ -142,4 +142,22 @@ public class User {
 	public void setTemp(String temp) {
 		this.temp = temp;
 	}
+
+	@Override
+	public String toString() {
+		return "User{" +
+				"id=" + id +
+				", email='" + email + '\'' +
+				", password='" + password + '\'' +
+				", username='" + username + '\'' +
+				", name='" + name + '\'' +
+				", lastName='" + lastName + '\'' +
+				", active=" + active +
+				", adresse='" + adresse + '\'' +
+				", genre='" + genre + '\'' +
+				", profession='" + profession + '\'' +
+				", temp='" + temp + '\'' +
+				", roles=" + roles +
+				'}';
+	}
 }

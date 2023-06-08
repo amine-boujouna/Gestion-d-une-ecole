@@ -11,25 +11,27 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import com.sip.store.services.FileStorageService;
+
+import javax.annotation.Resource;
 
 
 @SpringBootApplication
 public class StoreApplication {
-
+	@Resource
+	FileStorageService fileStorageService;
 	public static void main(String[] args) {
-		//new File(ArticleController.uploadDirectory).mkdir();
 
 		SpringApplication.run(StoreApplication.class, args);
-		/*Path path = Paths.get(ProviderController.uploadDirectory);
-		try{
-			Files.createDirectory(path);
-		}
-		catch(IOException ex){
-
-		}*/
-
 	}
+	/*@Override
+	public void run(String... arg) throws Exception {
+		fileStorageService.init();
+	}
+
+	 */
 
 }
